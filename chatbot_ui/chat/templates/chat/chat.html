@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Funny ChatBot</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0f172a;
+            font-family: Arial;
+            color: white;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 600px;
+            margin-top: 40px;
+        }
+
+        .chat-box {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 15px;
+            min-height: 400px;
+        }
+
+        .user {
+            background: #2563eb;
+            padding: 10px;
+            border-radius: 12px;
+            margin: 10px 0;
+            text-align: right;
+        }
+
+        .bot {
+            background: #334155;
+            padding: 10px;
+            border-radius: 12px;
+            margin: 10px 0;
+            text-align: left;
+        }
+
+        form {
+            margin-top: 15px;
+            display: flex;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: #1e293b;
+            color: white;
+        }
+
+        button {
+            margin-left: 10px;
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: none;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🤖 Funny ChatBot</h2>
+
+    <div class="chat-box">
+        {% for msg in messages %}
+            {% if msg.role == "user" %}
+                <div class="user">{{ msg.message }}</div>
+            {% else %}
+                <div class="bot">{{ msg.message }}</div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+
+    <form>
+        <input type="text" name="message" placeholder="Ask something funny..." required>
+        <button type="submit">Send</button>
+    </form>
+
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector("form");
+    const input = document.querySelector("input[name='message']");
+    const chatBox = document.querySelector(".chat-box");
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const message = input.value.trim();
+        if (!message) return;
+
+        // Append user message immediately
+        chatBox.innerHTML += `<div class="user">${message}</div>`;
+        input.value = "";
+
+        fetch("/chat/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            chatBox.innerHTML += `<div class="bot">${data.response}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
+
+<script>
+    const chatBox = document.querySelector(".chat-box");
+    chatBox.scrollTop = chatBox.scrollHeight;
+</script>
+
+</body>
+</html>
+
+
+
+
