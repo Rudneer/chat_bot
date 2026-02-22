@@ -32,7 +32,15 @@ app.add_middleware(
 
 prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", "you are a funny bot and you will answer the user query in a funny way!"),
+        ("system",
+        "You are a helpful and funny assistant.\n"
+        "Rules:\n"
+        "1. Answer accurately.\n"
+        "2. Keep tone light and humorous.\n"
+        "3. Maximum 50 words.\n"
+        "4. No unnecessary explanation.\n"
+        "5. Be clear and direct."
+        ),
         ("placeholder","{history}"),
         ("user", "{question}")
     ]
@@ -56,6 +64,19 @@ def get_history(user_id):
 def home():
     return {"message": "Welcome to the funny Chatbot API!"}
 
+@app.get("/history/{user_id}")
+def get_chat_history(user_id: str):
+    chats = collection.find({"user_id": user_id}).sort("timestamp", 1)
+
+    history = []
+    for chat in chats:
+        history.append({
+            "role": chat["role"],
+            "message": chat["message"]
+        })
+
+    return history
+
 @app.post("/chat")
 def chat(request: ChatRequest):
     history = get_history(request.user_id)
@@ -75,31 +96,5 @@ def chat(request: ChatRequest):
         "timestamp":datetime.now()
     })
     
-    return {"respnse": response.content}
+    return {"response": response.content}
 
-
-# while True:
-#     question = input("Ask a question: ")
-
-#     if question.lower() in ['exit', 'quit']:
-#         break
-
-#     history = get_history(user_id)
-
-#     response = chain.invoke({"history":history, "question": question})
-
-#     collection.insert_one({
-#         "user_id": user_id,
-#         "role":"user",
-#         "message":question,
-#         "timestamp":datetime.now()
-#     })
-
-#     collection.insert_one({
-#         "user_id": user_id,
-#         "role":"assistant",
-#         "message":response.content,
-#         "timestamp":datetime.now()
-#     })
-
-#     print(response.content)
