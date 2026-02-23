@@ -24,11 +24,16 @@ class ChatRequest(BaseModel):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["*"],
+    allow_origins = [
+        "http://127.0.0.1:8000",
+        "http://localhost:8000",
+        "https://chat-bot-1-u2ks.onrender.com"
+    ],
     allow_methods = ["*"],
     allow_headers = ["*"],
-    allow_credentials = True
+    allow_credentials = True,
 )
+
 
 prompt = ChatPromptTemplate.from_messages(
     [
