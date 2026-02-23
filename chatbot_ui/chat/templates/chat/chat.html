@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const typingIndicator = addMessage("Bot is typing", "bot", true);
 
-        fetch("/chat/", {
+        fetch("https://chat-bot-jrpl.onrender.com/chat/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
