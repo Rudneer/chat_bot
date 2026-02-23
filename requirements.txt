@@ -8,3 +8,4 @@ pymongo
 fastapi
 uvicorn
 python-multipart
+gunicorn
