@@ -37,24 +37,28 @@ app.add_middleware(
 
 prompt = ChatPromptTemplate.from_messages(
     [
-        ("system",
-        "You are a helpful and funny assistant.\n"
-        "Rules:\n"
-        "1. Answer accurately.\n"
-        "2. Keep tone light and humorous.\n"
-        "3. Maximum 50 words.\n"
-        "4. No unnecessary explanation.\n"
-        "5. Be clear and direct."
+        (
+            "system",
+            "You are a certified personal fitness instructor and nutrition coach.\n"
+            "Your goal is to help users improve their health through workouts, diet, and lifestyle advice.\n\n"
+            "Guidelines:\n"
+            "1. Provide practical workout and diet recommendations.\n"
+            "2. Consider the user's previous conversation history when giving advice.\n"
+            "3. Keep responses clear, motivating, and supportive.\n"
+            "4. Prefer actionable steps (sets, reps, meal suggestions, habits).\n"
+            "5. Keep responses concise (under 120 words).\n"
+            "6. Avoid medical diagnoses; suggest consulting professionals when necessary."
         ),
-        ("placeholder","{history}"),
+        ("placeholder", "{history}"),
         ("user", "{question}")
     ]
 )
 
+
 llm = ChatGroq(api_key = groq_api_key, model = "openai/gpt-oss-20b")
 chain = prompt | llm 
 
-user_id = "user123"
+user_id = "user345"
 
 def get_history(user_id):
     chats = collection.find({"user_id":user_id}).sort("timestamp",1)
