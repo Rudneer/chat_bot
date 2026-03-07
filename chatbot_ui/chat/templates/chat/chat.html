@@ -6,27 +6,27 @@
 <style>
 
 body{
-margin:0;
-background:linear-gradient(135deg,#0f172a,#1e293b);
-font-family:system-ui,-apple-system,Segoe UI,Roboto;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-color:white;
+    margin:0;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    color:white;
 }
 
 .container{
-width:650px;
-display:flex;
-flex-direction:column;
-height:92vh;
+    width:650px;
+    display:flex;
+    flex-direction:column;
+    height:92vh;
 }
 
 h2{
-text-align:center;
-margin-bottom:15px;
-font-weight:600;
+    text-align:center;
+    margin-bottom:15px;
+    font-weight:600;
 }
 
 .chat-box{
@@ -69,216 +69,214 @@ font-weight:600;
 /* Markdown styling */
 
 .bot ul{
-margin:6px 0 6px 18px;
-padding:0;
+    margin:6px 0 6px 18px;
+    padding:0;
 }
 
 .bot li{
-margin-bottom:4px;
+    margin-bottom:4px;
 }
 
 .bot strong{
-color:#60a5fa;
+    color:#60a5fa;
 }
 
 .bot h3{
-margin:8px 0;
+    margin:8px 0;
 }
 
 .bot p{
-margin:4px 0;
+    margin:4px 0;
 }
 
 @keyframes fadeIn{
-from{opacity:0;transform:translateY(8px);}
-to{opacity:1;transform:translateY(0);}
+    from{opacity:0;transform:translateY(8px);}
+    to{opacity:1;transform:translateY(0);}
 }
 
 /* typing animation */
 
 .typing{
-font-style:italic;
-opacity:.7;
+    font-style:italic;
+    opacity:.7;
 }
 
 .typing::after{
-content:"";
-animation:dots 1.5s steps(3,end) infinite;
+    content:"";
+    animation:dots 1.5s steps(3,end) infinite;
 }
 
 @keyframes dots{
-0%{content:"";}
-33%{content:".";}
-66%{content:"..";}
-100%{content:"...";}
+    0%{content:"";}
+    33%{content:".";}
+    66%{content:"..";}
+    100%{content:"...";}
 }
 
 form{
-margin-top:12px;
-display:flex;
+    margin-top:12px;
+    display:flex;
 }
 
 input{
-flex:1;
-padding:14px;
-border-radius:12px;
-border:none;
-background:#1e293b;
-color:white;
-outline:none;
+    flex:1;
+    padding:14px;
+    border-radius:12px;
+    border:none;
+    background:#1e293b;
+    color:white;
+    outline:none;
 }
 
 button{
-margin-left:10px;
-padding:14px 20px;
-border-radius:12px;
-border:none;
-background:#2563eb;
-color:white;
-cursor:pointer;
-transition:.2s;
+    margin-left:10px;
+    padding:14px 20px;
+    border-radius:12px;
+    border:none;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    transition:.2s;
 }
 
 button:hover{
-background:#1d4ed8;
+    background:#1d4ed8;
 }
 
 .chat-box::-webkit-scrollbar{
-width:6px;
+    width:6px;
 }
 
 .chat-box::-webkit-scrollbar-thumb{
-background:#2563eb;
-border-radius:10px;
+    background:#2563eb;
+    border-radius:10px;
 }
 
 </style>
 
 <!-- Markdown Parser -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
 </head>
 
-<body>
+    <body>
 
-<div class="container">
+    <div class="container">
 
-<h2>🤖 FitBuddy – Your AI Fitness Coach</h2>
+    <h2>🤖 FitBuddy – Your AI Fitness Coach</h2>
 
-<div class="chat-box" id="chat-box">
-{% for msg in messages %}
-<div class="message {{msg.role}}">
-{{msg.message}}
-</div>
-{% endfor %}
-</div>
+    <div class="chat-box" id="chat-box"> {% for msg in messages %}
 
-<form id="chat-form">
-<input type="text" id="message-input" placeholder="Ask about workouts, diet, fitness..." required>
-<button type="submit" id="send-btn">Send</button>
-</form>
+    <div class="message {{msg.role}}">{{msg.message}}
 
-</div>
+    </div>{% endfor %}</div>
 
-<script>
+        <form id="chat-form">
+            <input type="text" id="message-input" placeholder="Ask about workouts, diet, fitness..." required>
+            <button type="submit" id="send-btn">Send</button>
+        </form>
 
-document.addEventListener("DOMContentLoaded",function(){
+    </div>
 
-const form=document.getElementById("chat-form");
-const input=document.getElementById("message-input");
-const chatBox=document.getElementById("chat-box");
-const sendBtn=document.getElementById("send-btn");
+    <script>
 
-chatBox.scrollTop=chatBox.scrollHeight;
+    document.addEventListener("DOMContentLoaded",function(){
 
-function renderMarkdown(text){
+    const form=document.getElementById("chat-form");
+    const input=document.getElementById("message-input");
+    const chatBox=document.getElementById("chat-box");
+    const sendBtn=document.getElementById("send-btn");
 
-if(!text) return "";
+    chatBox.scrollTop=chatBox.scrollHeight;
 
-text=text
-.replace(/\\n/g,"\n")
-.replace(/\*\*(.*?)\*\*/g,"**$1**");
+    function renderMarkdown(text){
 
-return marked.parse(text);
-}
+    if(!text) return "";
 
-function addMessage(text,type,isTyping=false){
+    text=text
+    .replace(/\\n/g,"\n")
+    .replace(/\*\*(.*?)\*\*/g,"**$1**");
 
-const msg=document.createElement("div");
-msg.classList.add("message",type);
+    return marked.parse(text);
+    }
 
-if(isTyping){
-msg.classList.add("typing");
-msg.innerText=text;
-}else{
-msg.innerHTML=renderMarkdown(text);
-}
+    function addMessage(text,type,isTyping=false){
 
-chatBox.appendChild(msg);
-chatBox.scrollTop=chatBox.scrollHeight;
+    const msg=document.createElement("div");
+    msg.classList.add("message",type);
 
-return msg;
-}
+    if(isTyping){
+        msg.classList.add("typing");
+        msg.innerText=text;
+        }
+    else{
+        msg.innerHTML=renderMarkdown(text);
+    }
 
-form.addEventListener("submit",function(e){
+    chatBox.appendChild(msg);
+    chatBox.scrollTop=chatBox.scrollHeight;
 
-e.preventDefault();
+    return msg;
+    }
 
-const message=input.value.trim();
-if(!message) return;
+    form.addEventListener("submit",function(e){
 
-addMessage(message,"user");
+    e.preventDefault();
 
-input.value="";
-sendBtn.disabled=true;
+    const message=input.value.trim();
+    if(!message) return;
 
-const typingIndicator=addMessage("FitBuddy is typing","bot",true);
+    addMessage(message,"user");
 
-fetch("http://localhost:8000/chat",{
+    input.value="";
+    sendBtn.disabled=true;
 
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
+    const typingIndicator=addMessage("FitBuddy is typing","bot",true);
 
-body:JSON.stringify({
-user_id:"user1",
-question:message
-})
+    // fetch("http://localhost:8000/chat",{
+    fetch("https://chat-bot-jrpl.onrender.com/chat", {
+        method:"POST",
+        headers:{
+        "Content-Type":"application/json"
+    },
 
-})
-.then(res=>res.json())
-.then(data=>{
+    body:JSON.stringify({
+        user_id:"user1",
+        question:message
+    })
 
-typingIndicator.remove();
+    })
+    .then(res=>res.json())
+    .then(data=>{
 
-addMessage(data.response,"bot");
+    typingIndicator.remove();
 
-})
-.catch(()=>{
+    addMessage(data.response,"bot");
 
-typingIndicator.remove();
+    })
+    .catch(()=>{
 
-addMessage("⚠️ Something went wrong.","bot");
+    typingIndicator.remove();
 
-})
-.finally(()=>{
+    addMessage("⚠️ Something went wrong.","bot");
 
-sendBtn.disabled=false;
+    })
+    .finally(()=>{
 
-});
+    sendBtn.disabled=false;
 
-});
+    });
 
-input.addEventListener("keypress",function(e){
-if(e.key==="Enter"){
-form.dispatchEvent(new Event("submit"));
-}
-});
+    });
 
-});
+    input.addEventListener("keypress",function(e){
+    if(e.key==="Enter"){
+        form.dispatchEvent(new Event("submit"));
+    }
+    });
 
-</script>
+    });
 
-</body>
+    </script>
+
+    </body>
 </html>
