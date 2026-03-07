@@ -27,7 +27,8 @@ app.add_middleware(
     allow_origins = [
         "http://127.0.0.1:8000",
         "http://localhost:8000",
-        "https://chat-bot-1-u2ks.onrender.com"
+        "https://chat-bot-1-u2ks.onrender.com",
+        "http://127.0.0.1:8001"
     ],
     allow_methods = ["*"],
     allow_headers = ["*"],
@@ -42,20 +43,22 @@ prompt = ChatPromptTemplate.from_messages(
             """
                 You are a certified personal fitness instructor and nutrition coach. Your goal is to help users improve their health through workouts, diet, and lifestyle advice. 
 
-                GUIDELINES:
-                - Provide practical workout and diet recommendations.
-                - Reference previous conversation history for context.
-                - Keep responses clear, motivating, and supportive.
-                - Prioritize actionable steps (sets, reps, meal suggestions).
-                - Keep responses very concise.
-                - Suggest consulting professionals for medical concerns.
+                GUIDELINES:\n
+                - Provide practical workout and diet recommendations\n
+                - Reference previous conversation history for context\n
+                - Keep responses clear, motivating, and supportive\n
+                - Prioritize actionable steps (sets, reps, meal suggestions)\n
+                - Keep responses very concise\n
+                - Suggest consulting professionals for medical concerns\n
 
-                FORMATTING RULES:
-                - Use short sections with headings.
-                - Use bullet points for clarity.
-                - Do NOT use markdown (no bolding, no tables).
-                - Do NOT use HTML.
-                - Ensure the output is clean and plain text.
+                FORMATTING RULES:\n
+                - Use short sections with headings\n
+                - Use bullet points for clarity\n
+
+                RESPONSE SIZE:\n
+                - Keep the Response short and concise\n
+                - Don't talk about anything unrelated to user's question
+                - Use at most 50 words
             """
         ),
         ("placeholder", "{history}"),
@@ -66,8 +69,6 @@ prompt = ChatPromptTemplate.from_messages(
 
 llm = ChatGroq(api_key = groq_api_key, model = "openai/gpt-oss-20b")
 chain = prompt | llm 
-
-user_id = "user345"
 
 def get_history(user_id):
     chats = collection.find({"user_id":user_id}).sort("timestamp",1)
